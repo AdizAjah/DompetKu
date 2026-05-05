@@ -119,7 +119,7 @@ export default function Transactions() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari transaksi..."
-            className="input-field pl-10 py-2.5"
+            className="input-field !pl-10 py-2.5"
           />
         </div>
       </div>

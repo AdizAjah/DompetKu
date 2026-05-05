@@ -11,6 +11,13 @@ import { Download, Upload, Trash2, Moon, Sun, Monitor, Plus, X, Palette, Tag } f
 import Modal from '../components/common/Modal';
 import toast from 'react-hot-toast';
 
+const Section = ({ title, children }) => (
+  <div className="card p-6 space-y-4">
+    <h2 className="text-base font-semibold text-surface-800 dark:text-surface-200">{title}</h2>
+    {children}
+  </div>
+);
+
 export default function Settings() {
   const settings = useSettings();
   const { theme, setTheme, isDark } = useTheme();
@@ -62,12 +69,7 @@ export default function Settings() {
     toast.success('Kategori dihapus');
   };
 
-  const Section = ({ title, children }) => (
-    <div className="card p-6 space-y-4">
-      <h2 className="text-base font-semibold text-surface-800 dark:text-surface-200">{title}</h2>
-      {children}
-    </div>
-  );
+  // (Moved Section outside)
 
   return (
     <div>

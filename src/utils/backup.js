@@ -37,18 +37,40 @@ export async function exportData() {
 
     const jsonString = JSON.stringify(data, null, 2);
     const blob = new Blob([jsonString], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
     const dateStr = new Date().toISOString().split('T')[0];
-    a.href = url;
-    a.download = `dompetku-backup-${dateStr}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const defaultFilename = `dompetku-backup-${dateStr}.json`;
 
-    return { success: true, message: 'Data berhasil diekspor!' };
+    if (window.showSaveFilePicker) {
+      try {
+        const fileHandle = await window.showSaveFilePicker({
+          suggestedName: defaultFilename,
+          types: [{
+            description: 'JSON File',
+            accept: { 'application/json': ['.json'] },
+          }],
+        });
+        const writable = await fileHandle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+        return { success: true, message: 'Data berhasil disimpan!' };
+      } catch (err) {
+        if (err.name === 'AbortError') {
+          return { success: false, message: 'Penyimpanan dibatalkan.' };
+        }
+        throw err;
+      }
+    } else {
+      // Fallback for browsers that don't support showSaveFilePicker
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = defaultFilename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return { success: true, message: 'Data berhasil diekspor!' };
+    }
   } catch (error) {
     console.error('Export failed:', error);
     return { success: false, message: 'Gagal mengekspor data: ' + error.message };

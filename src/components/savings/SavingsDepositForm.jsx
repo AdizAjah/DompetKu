@@ -3,6 +3,7 @@ import Modal from '../common/Modal';
 import CurrencyInput from '../common/CurrencyInput';
 import { addSavingsDeposit, withdrawSavings } from '../../db/useSavings';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { AlertTriangle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function SavingsDepositForm({ isOpen, onClose, goal, mode = 'deposit' }) {
@@ -13,12 +14,18 @@ export default function SavingsDepositForm({ isOpen, onClose, goal, mode = 'depo
 
   const remaining = goal.targetAmount - goal.savedAmount;
   const isDeposit = mode === 'deposit';
-  const maxAmount = isDeposit ? Infinity : goal.savedAmount;
+  const maxAmount = isDeposit ? remaining : goal.savedAmount;
+  const isOverflow = amount > maxAmount;
+  const isValid = amount > 0 && !isOverflow;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!amount || amount <= 0) {
       toast.error('Masukkan jumlah yang valid');
+      return;
+    }
+    if (isDeposit && amount > remaining) {
+      toast.error(`Nominal melebihi sisa target tabungan (${formatCurrency(remaining)})`);
       return;
     }
     if (!isDeposit && amount > goal.savedAmount) {
@@ -76,15 +83,35 @@ export default function SavingsDepositForm({ isOpen, onClose, goal, mode = 'depo
             {isDeposit ? 'Jumlah Tabungan' : 'Jumlah Penarikan'}
           </label>
           <CurrencyInput value={amount} onChange={setAmount} />
-          {isDeposit && remaining > 0 && (
+
+          {/* Real-time overflow error */}
+          {isOverflow && (
+            <div className="flex items-start gap-2 mt-2 p-2.5 rounded-lg bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20">
+              <AlertTriangle size={14} className="text-red-500 mt-0.5 shrink-0" />
+              <p className="text-xs text-red-600 dark:text-red-400">
+                {isDeposit
+                  ? `Nominal melebihi sisa target! Maksimal pengisian saat ini: ${formatCurrency(remaining)}`
+                  : `Nominal melebihi saldo tabungan! Maksimal penarikan: ${formatCurrency(goal.savedAmount)}`}
+              </p>
+            </div>
+          )}
+
+          {/* Max helper text */}
+          {!isOverflow && (
+            <p className="mt-2 text-xs text-surface-400">
+              Maks. {isDeposit ? 'pengisian' : 'penarikan'}: {formatCurrency(maxAmount)}
+            </p>
+          )}
+
+          {isDeposit && remaining > 0 && !isOverflow && (
             <button type="button" onClick={() => setAmount(remaining)}
-              className="mt-2 text-xs font-medium text-primary-500 hover:text-primary-600 transition-colors">
+              className="mt-1 text-xs font-medium text-primary-500 hover:text-primary-600 transition-colors">
               Penuhi target ({formatCurrency(remaining)})
             </button>
           )}
-          {!isDeposit && goal.savedAmount > 0 && (
+          {!isDeposit && goal.savedAmount > 0 && !isOverflow && (
             <button type="button" onClick={() => setAmount(goal.savedAmount)}
-              className="mt-2 text-xs font-medium text-red-500 hover:text-red-600 transition-colors">
+              className="mt-1 text-xs font-medium text-red-500 hover:text-red-600 transition-colors">
               Tarik semua ({formatCurrency(goal.savedAmount)})
             </button>
           )}
@@ -100,7 +127,11 @@ export default function SavingsDepositForm({ isOpen, onClose, goal, mode = 'depo
         </div>
 
         {/* Submit */}
-        <button type="submit" className={`btn w-full py-3.5 text-base ${isDeposit ? 'btn-primary' : 'btn-danger'}`}>
+        <button
+          type="submit"
+          disabled={!isValid}
+          className={`btn w-full py-3.5 text-base ${isDeposit ? 'btn-primary' : 'btn-danger'} ${!isValid ? 'opacity-50 cursor-not-allowed' : ''}`}
+        >
           {isDeposit ? 'Tabung' : 'Tarik'} {amount > 0 ? formatCurrency(amount) : ''}
         </button>
       </form>
