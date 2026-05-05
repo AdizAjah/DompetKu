@@ -4,6 +4,7 @@ import BudgetGauge from '../components/dashboard/BudgetGauge';
 import SpendingChart from '../components/dashboard/SpendingChart';
 import QuickStats from '../components/dashboard/QuickStats';
 import RecentTransactions from '../components/dashboard/RecentTransactions';
+import SavingsWidget from '../components/dashboard/SavingsWidget';
 
 export default function Dashboard() {
   return (
@@ -24,11 +25,14 @@ export default function Dashboard() {
         {/* Quick Stats */}
         <QuickStats />
 
-        {/* Charts + Recent */}
+        {/* Charts + Savings Widget */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <SpendingChart />
-          <RecentTransactions />
+          <SavingsWidget />
         </div>
+
+        {/* Recent Transactions */}
+        <RecentTransactions />
       </div>
     </div>
   );

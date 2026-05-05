@@ -2,7 +2,8 @@ import {
   UtensilsCrossed, Car, Zap, Gamepad2, ShoppingBag, Heart, 
   MoreHorizontal, Banknote, Laptop, Gift, Tag,
   Home, Wifi, BookOpen, Plane, Coffee, Shirt,
-  Smartphone, Wrench, GraduationCap, Baby
+  Smartphone, Wrench, GraduationCap, Baby,
+  PiggyBank, Landmark
 } from 'lucide-react';
 
 /**
@@ -12,7 +13,8 @@ export const iconMap = {
   UtensilsCrossed, Car, Zap, Gamepad2, ShoppingBag, Heart,
   MoreHorizontal, Banknote, Laptop, Gift, Tag,
   Home, Wifi, BookOpen, Plane, Coffee, Shirt,
-  Smartphone, Wrench, GraduationCap, Baby
+  Smartphone, Wrench, GraduationCap, Baby,
+  PiggyBank, Landmark
 };
 
 /**
@@ -45,6 +47,8 @@ export const availableIcons = [
   { name: 'Wrench', label: 'Perbaikan' },
   { name: 'GraduationCap', label: 'Sekolah' },
   { name: 'Baby', label: 'Anak' },
+  { name: 'PiggyBank', label: 'Tabungan' },
+  { name: 'Landmark', label: 'Bank' },
   { name: 'Tag', label: 'Lainnya' },
 ];
 

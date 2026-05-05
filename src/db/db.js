@@ -10,6 +10,17 @@ db.version(1).stores({
   categories: '++id, name, icon, color, type'
 });
 
+// Version 2: Add savings tables
+db.version(2).stores({
+  transactions: '++id, type, category, date, amount, description, createdAt',
+  debts: '++id, creditorName, totalAmount, paidAmount, dueDate, status, createdAt',
+  debtPayments: '++id, debtId, amount, date, note',
+  settings: 'id',
+  categories: '++id, name, icon, color, type',
+  savings: '++id, name, targetAmount, savedAmount, targetDate, status, color, createdAt',
+  savingsDeposits: '++id, savingsId, amount, date, note'
+});
+
 // Seed default data on first open
 db.on('populate', () => {
   // Default settings
@@ -30,6 +41,7 @@ db.on('populate', () => {
     { name: 'Belanja', icon: 'ShoppingBag', color: '#14b8a6', type: 'expense' },
     { name: 'Kesehatan', icon: 'Heart', color: '#ef4444', type: 'expense' },
     { name: 'Bayar Hutang', icon: 'Landmark', color: '#f59e0b', type: 'expense' },
+    { name: 'Tabungan', icon: 'PiggyBank', color: '#6366f1', type: 'expense' },
     { name: 'Lainnya', icon: 'MoreHorizontal', color: '#64748b', type: 'expense' },
     // Default income categories
     { name: 'Gaji', icon: 'Banknote', color: '#10b981', type: 'income' },

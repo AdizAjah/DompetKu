@@ -1,11 +1,12 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, ArrowLeftRight, Landmark, BarChart3, Settings, Wallet, Moon, Sun } from 'lucide-react';
+import { LayoutDashboard, ArrowLeftRight, Landmark, PiggyBank, BarChart3, Settings, Wallet, Moon, Sun } from 'lucide-react';
 import { useTheme } from '../../hooks/useTheme';
 
 const navItems = [
   { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
   { path: '/transactions', icon: ArrowLeftRight, label: 'Transaksi' },
   { path: '/debts', icon: Landmark, label: 'Hutang' },
+  { path: '/savings', icon: PiggyBank, label: 'Tabungan' },
   { path: '/reports', icon: BarChart3, label: 'Laporan' },
   { path: '/settings', icon: Settings, label: 'Pengaturan' },
 ];

@@ -1,9 +1,18 @@
-import { TrendingUp, TrendingDown, Wallet } from 'lucide-react';
+import { TrendingUp, TrendingDown, Wallet, ShieldCheck } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { useTotalBalance } from '../../db/useTransactions';
+import { useTotalSaved } from '../../db/useSavings';
+import { useTotalDebt } from '../../db/useDebts';
 
 export default function BalanceCard() {
   const balance = useTotalBalance();
+  const totalSaved = useTotalSaved();
+  const totalDebt = useTotalDebt();
+
+  // Disposable = balance (already reduced by savings deposits as expenses)
+  // But we also show how much is "locked" in savings
+  const disposable = (balance || 0);
+  const locked = (totalSaved || 0);
 
   return (
     <div className="relative overflow-hidden rounded-2xl p-6 gradient-primary text-white shadow-xl shadow-primary-500/20">
@@ -23,17 +32,27 @@ export default function BalanceCard() {
           {balance !== undefined ? formatCurrency(balance) : '...'}
         </p>
 
-        <div className="flex items-center gap-1 mt-3 text-sm text-white/70">
-          {balance >= 0 ? (
-            <>
-              <TrendingUp size={16} />
-              <span>Keuangan sehat</span>
-            </>
-          ) : (
-            <>
-              <TrendingDown size={16} />
-              <span>Pengeluaran melebihi pemasukan</span>
-            </>
+        {/* Disposable income info */}
+        <div className="flex items-center flex-wrap gap-x-4 gap-y-1 mt-3">
+          <div className="flex items-center gap-1 text-sm text-white/70">
+            {balance >= 0 ? (
+              <>
+                <TrendingUp size={16} />
+                <span>Keuangan sehat</span>
+              </>
+            ) : (
+              <>
+                <TrendingDown size={16} />
+                <span>Pengeluaran melebihi pemasukan</span>
+              </>
+            )}
+          </div>
+
+          {locked > 0 && (
+            <div className="flex items-center gap-1 text-xs text-white/50">
+              <ShieldCheck size={13} />
+              <span>{formatCurrency(locked)} dialokasi tabungan</span>
+            </div>
           )}
         </div>
       </div>

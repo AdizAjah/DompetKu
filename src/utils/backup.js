@@ -7,12 +7,14 @@ const APP_VERSION = '1.0.0';
  */
 export async function exportData() {
   try {
-    const [transactions, debts, debtPayments, settings, categories] = await Promise.all([
+    const [transactions, debts, debtPayments, settings, categories, savings, savingsDeposits] = await Promise.all([
       db.transactions.toArray(),
       db.debts.toArray(),
       db.debtPayments.toArray(),
       db.settings.toArray(),
-      db.categories.toArray()
+      db.categories.toArray(),
+      db.savings.toArray(),
+      db.savingsDeposits.toArray()
     ]);
 
     const data = {
@@ -21,13 +23,16 @@ export async function exportData() {
         version: APP_VERSION,
         exportDate: new Date().toISOString(),
         totalTransactions: transactions.length,
-        totalDebts: debts.length
+        totalDebts: debts.length,
+        totalSavings: savings.length
       },
       transactions,
       debts,
       debtPayments,
       settings,
-      categories
+      categories,
+      savings,
+      savingsDeposits
     };
 
     const jsonString = JSON.stringify(data, null, 2);
@@ -65,13 +70,15 @@ export async function importData(file) {
     }
 
     // Clear existing data and import
-    await db.transaction('rw', db.transactions, db.debts, db.debtPayments, db.settings, db.categories, async () => {
+    await db.transaction('rw', db.transactions, db.debts, db.debtPayments, db.settings, db.categories, db.savings, db.savingsDeposits, async () => {
       // Clear all tables
       await db.transactions.clear();
       await db.debts.clear();
       await db.debtPayments.clear();
       await db.settings.clear();
       await db.categories.clear();
+      await db.savings.clear();
+      await db.savingsDeposits.clear();
 
       // Import data
       if (data.transactions?.length) {
@@ -101,6 +108,18 @@ export async function importData(file) {
           return rest;
         }));
       }
+      if (data.savings?.length) {
+        await db.savings.bulkAdd(data.savings.map(s => {
+          const { id, ...rest } = s;
+          return rest;
+        }));
+      }
+      if (data.savingsDeposits?.length) {
+        await db.savingsDeposits.bulkAdd(data.savingsDeposits.map(d => {
+          const { id, ...rest } = d;
+          return rest;
+        }));
+      }
     });
 
     return { 
@@ -121,10 +140,12 @@ export async function importData(file) {
  */
 export async function clearAllData() {
   try {
-    await db.transaction('rw', db.transactions, db.debts, db.debtPayments, async () => {
+    await db.transaction('rw', db.transactions, db.debts, db.debtPayments, db.savings, db.savingsDeposits, async () => {
       await db.transactions.clear();
       await db.debts.clear();
       await db.debtPayments.clear();
+      await db.savings.clear();
+      await db.savingsDeposits.clear();
     });
     return { success: true, message: 'Semua data berhasil dihapus.' };
   } catch (error) {
