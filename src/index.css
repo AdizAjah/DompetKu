@@ -1,0 +1,472 @@
+@import "tailwindcss";
+
+/* Tell Tailwind v4 to use class-based dark mode (matches .dark on body) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ========================================
+   DompetKu — Design System
+   ======================================== */
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  --color-primary-50: #ecfdf5;
+  --color-primary-100: #d1fae5;
+  --color-primary-200: #a7f3d0;
+  --color-primary-300: #6ee7b7;
+  --color-primary-400: #34d399;
+  --color-primary-500: #10b981;
+  --color-primary-600: #059669;
+  --color-primary-700: #047857;
+  --color-primary-800: #065f46;
+  --color-primary-900: #064e3b;
+
+  --color-surface-50: #f8fafc;
+  --color-surface-100: #f1f5f9;
+  --color-surface-200: #e2e8f0;
+  --color-surface-300: #cbd5e1;
+  --color-surface-400: #94a3b8;
+  --color-surface-500: #64748b;
+  --color-surface-600: #475569;
+  --color-surface-700: #334155;
+  --color-surface-800: #1e293b;
+  --color-surface-900: #0f172a;
+  --color-surface-950: #020617;
+
+  --color-income: #10b981;
+  --color-expense: #ef4444;
+  --color-debt: #f59e0b;
+  --color-danger: #ef4444;
+}
+
+/* ========================================
+   Global Reset & Base
+   ======================================== */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light mode default */
+body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+/* Dark mode */
+body.dark {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+/* ========================================
+   Scrollbar Styling
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* ========================================
+   Custom Animations
+   ======================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s ease-out;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+.animate-count-up {
+  animation: countUp 0.5s ease-out;
+}
+
+/* ========================================
+   Glassmorphism Utilities
+   ======================================== */
+
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.dark .glass-strong {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ========================================
+   Card Utilities
+   ======================================== */
+
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.dark .card {
+  background: #1e293b;
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.dark .card-hover:hover {
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.4);
+}
+
+/* ========================================
+   Gradient Utilities
+   ======================================== */
+
+.gradient-primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.gradient-income {
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+}
+
+.gradient-expense {
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+}
+
+.gradient-debt {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+.gradient-dark {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+/* ========================================
+   Input Styling
+   ======================================== */
+
+.input-field {
+  width: 100%;
+  padding: 12px 16px;
+  background: #f1f5f9;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s ease;
+  outline: none;
+  color: #0f172a;
+}
+
+.input-field:focus {
+  border-color: #10b981;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.dark .input-field {
+  background: #0f172a;
+  color: #f1f5f9;
+}
+
+.dark .input-field:focus {
+  background: #1e293b;
+  border-color: #34d399;
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.15);
+}
+
+.input-field::placeholder {
+  color: #94a3b8;
+}
+
+/* ========================================
+   Button Utilities
+   ======================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  outline: none;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.dark .btn-secondary {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+.btn-secondary:hover {
+  background: #e2e8f0;
+}
+
+.dark .btn-secondary:hover {
+  background: #475569;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:hover {
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #64748b;
+}
+
+.btn-ghost:hover {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.dark .btn-ghost:hover {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+/* ========================================
+   Badge Utilities
+   ======================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-income {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.dark .badge-income {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+}
+
+.badge-expense {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+.dark .badge-expense {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+}
+
+.badge-debt {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+}
+
+.dark .badge-debt {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+.badge-paid {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+}
+
+.dark .badge-paid {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+}
+
+/* ========================================
+   Page Transition
+   ======================================== */
+
+.page-enter {
+  animation: slideUp 0.35s ease-out;
+}
+
+/* ========================================
+   Number Formatting (no-spin)
+   ======================================== */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* ========================================
+   Mobile Optimizations
+   ======================================== */
+
+@media (max-width: 768px) {
+  .card {
+    border-radius: 14px;
+  }
+  
+  .btn {
+    padding: 12px 20px;
+  }
+}
+
+/* Safe area padding for mobile */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
