@@ -136,8 +136,8 @@
 
 ```bash
 # Clone repository
-git clone https://github.com/your-username/manage-uang.git
-cd manage-uang
+git clone https://github.com/AdizAjah/DompetKu.git
+cd DompetKu
 
 # Install dependencies
 npm install --legacy-peer-deps
