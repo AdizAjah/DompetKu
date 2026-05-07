@@ -7,13 +7,16 @@ import { useTheme } from '../hooks/useTheme';
 import { exportData, importData, clearAllData } from '../utils/backup';
 import { formatCurrency } from '../utils/formatCurrency';
 import { getCategoryIcon, availableIcons, availableColors } from '../utils/categories';
-import { Download, Upload, Trash2, Moon, Sun, Monitor, Plus, X, Palette, Tag } from 'lucide-react';
+import { Download, Upload, Trash2, Moon, Sun, Monitor, Plus, X, Palette, Tag, Wallet, SwatchBook, HardDrive, ShieldAlert, Lock, Info } from 'lucide-react';
 import Modal from '../components/common/Modal';
 import toast from 'react-hot-toast';
 
-const Section = ({ title, children }) => (
+const Section = ({ icon: Icon, title, children }) => (
   <div className="card p-6 space-y-4">
-    <h2 className="text-base font-semibold text-surface-800 dark:text-surface-200">{title}</h2>
+    <h2 className="flex items-center gap-2.5 text-base font-semibold text-surface-800 dark:text-surface-200">
+      {Icon && <Icon size={20} className="text-primary-500" />}
+      {title}
+    </h2>
     {children}
   </div>
 );
@@ -76,14 +79,14 @@ export default function Settings() {
       <Header title="Pengaturan" subtitle="Kustomisasi aplikasimu" />
       <div className="space-y-6 max-w-2xl">
         {/* Daily Limit */}
-        <Section title="💰 Anggaran Harian">
+        <Section icon={Wallet} title="Anggaran Harian">
           <p className="text-sm text-surface-500 dark:text-surface-400">Batas maksimal pengeluaran per hari</p>
           <CurrencyInput value={settings?.dailyLimit || 50000} onChange={handleDailyLimitChange} />
           <p className="text-xs text-surface-400">Saat ini: {formatCurrency(settings?.dailyLimit || 50000)}/hari</p>
         </Section>
 
         {/* Theme */}
-        <Section title="🎨 Tampilan">
+        <Section icon={Palette} title="Tampilan">
           <div className="grid grid-cols-3 gap-3">
             {[{v:'light',l:'Terang',I:Sun},{v:'dark',l:'Gelap',I:Moon},{v:'system',l:'Sistem',I:Monitor}].map(({v,l,I})=>(
               <button key={v} onClick={()=>setTheme(v)}
@@ -96,7 +99,7 @@ export default function Settings() {
         </Section>
 
         {/* Categories */}
-        <Section title="🏷️ Kategori">
+        <Section icon={SwatchBook} title="Kategori">
           <div className="space-y-3">
             <p className="text-xs font-semibold text-surface-400 uppercase">Pengeluaran</p>
             <div className="flex flex-wrap gap-2">
@@ -121,7 +124,7 @@ export default function Settings() {
         </Section>
 
         {/* Backup & Restore */}
-        <Section title="💾 Backup & Restore">
+        <Section icon={HardDrive} title="Backup & Restore">
           <p className="text-sm text-surface-500 dark:text-surface-400">Unduh data sebagai file JSON atau pulihkan dari backup</p>
           <div className="flex flex-col sm:flex-row gap-3">
             <button onClick={handleExport} className="btn btn-primary flex-1"><Download size={16}/>Ekspor Data</button>
@@ -131,7 +134,7 @@ export default function Settings() {
         </Section>
 
         {/* Danger Zone */}
-        <Section title="⚠️ Zona Bahaya">
+        <Section icon={ShieldAlert} title="Zona Bahaya">
           <p className="text-sm text-surface-500 dark:text-surface-400">Hapus semua transaksi dan hutang. Pengaturan dan kategori tetap tersimpan.</p>
           <button onClick={()=>setShowClearConfirm(true)} className="btn btn-danger"><Trash2 size={16}/>Hapus Semua Data</button>
         </Section>
@@ -140,7 +143,10 @@ export default function Settings() {
         <div className="card p-6 text-center">
           <p className="text-lg font-bold text-surface-800 dark:text-surface-200">DompetKu</p>
           <p className="text-sm text-surface-400 mt-1">v1.0.0 · Manajemen Keuangan Pribadi</p>
-          <p className="text-xs text-surface-400 mt-2">Data tersimpan 100% di perangkat Anda 🔒</p>
+          <p className="text-xs text-surface-400 mt-2 flex items-center justify-center gap-1.5">
+            <Lock size={12} className="text-primary-500" />
+            Data tersimpan 100% di perangkat Anda
+          </p>
         </div>
       </div>
 
