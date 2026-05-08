@@ -12,7 +12,7 @@ export default function RecentTransactions() {
   const categories = useCategories();
 
   return (
-    <div className="card p-6">
+    <div id="dashboard-recent-transactions" className="card p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-surface-500 dark:text-surface-400">
           Transaksi Terakhir

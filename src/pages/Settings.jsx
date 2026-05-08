@@ -2,12 +2,13 @@ import { useState, useRef } from 'react';
 import Header from '../components/layout/Header';
 import CurrencyInput from '../components/common/CurrencyInput';
 import ConfirmDialog from '../components/common/ConfirmDialog';
+import { useResetWalkthrough } from '../components/common/Walkthrough';
 import { useSettings, useCategories, updateSettings, addCategory, deleteCategory } from '../db/useSettings';
 import { useTheme } from '../hooks/useTheme';
 import { exportData, importData, clearAllData } from '../utils/backup';
 import { formatCurrency } from '../utils/formatCurrency';
 import { getCategoryIcon, availableIcons, availableColors } from '../utils/categories';
-import { Download, Upload, Trash2, Moon, Sun, Monitor, Plus, X, Palette, Tag, Wallet, SwatchBook, HardDrive, ShieldAlert, Lock, Info } from 'lucide-react';
+import { Download, Upload, Trash2, Moon, Sun, Monitor, Plus, X, Palette, Tag, Wallet, SwatchBook, HardDrive, ShieldAlert, Lock, Info, RotateCcw, BookOpen } from 'lucide-react';
 import Modal from '../components/common/Modal';
 import toast from 'react-hot-toast';
 
@@ -27,6 +28,7 @@ export default function Settings() {
   const expenseCategories = useCategories('expense');
   const incomeCategories = useCategories('income');
   const fileInputRef = useRef(null);
+  const resetWalkthrough = useResetWalkthrough();
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [showCatForm, setShowCatForm] = useState(false);
   const [newCatType, setNewCatType] = useState('expense');
@@ -137,6 +139,14 @@ export default function Settings() {
         <Section icon={ShieldAlert} title="Zona Bahaya">
           <p className="text-sm text-surface-500 dark:text-surface-400">Hapus semua transaksi dan hutang. Pengaturan dan kategori tetap tersimpan.</p>
           <button onClick={()=>setShowClearConfirm(true)} className="btn btn-danger"><Trash2 size={16}/>Hapus Semua Data</button>
+        </Section>
+
+        {/* Panduan / Walkthrough */}
+        <Section icon={BookOpen} title="Panduan">
+          <p className="text-sm text-surface-500 dark:text-surface-400">Tampilkan kembali panduan interaktif untuk mempelajari fitur-fitur utama DompetKu.</p>
+          <button onClick={resetWalkthrough} className="btn btn-secondary">
+            <RotateCcw size={16} />Reset Panduan
+          </button>
         </Section>
 
         {/* About */}

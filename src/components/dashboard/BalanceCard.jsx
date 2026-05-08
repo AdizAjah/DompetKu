@@ -15,7 +15,7 @@ export default function BalanceCard() {
   const locked = (totalSaved || 0);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl p-6 gradient-primary text-white shadow-xl shadow-primary-500/20">
+    <div id="dashboard-balance-card" className="relative overflow-hidden rounded-2xl p-6 gradient-primary text-white shadow-xl shadow-primary-500/20">
       {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
       <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />

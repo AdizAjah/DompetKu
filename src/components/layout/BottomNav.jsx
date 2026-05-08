@@ -12,7 +12,7 @@ const navItems = [
 
 export default function BottomNav() {
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40
+    <nav id="bottom-navigation" className="lg:hidden fixed bottom-0 left-0 right-0 z-40
       bg-white/90 dark:bg-surface-800/90 backdrop-blur-xl
       border-t border-surface-200 dark:border-surface-700/50 safe-bottom">
       <div className="flex items-center justify-around px-2 py-1">
