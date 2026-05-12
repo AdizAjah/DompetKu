@@ -17,7 +17,7 @@ export default function SavingsItem({ goal, onEdit, onDelete, onDeposit, onWithd
     : null;
 
   return (
-    <div className={`card p-5 transition-all ${isReached ? 'opacity-80' : 'card-hover'}`}>
+    <div className={`card p-5 transition-all overflow-hidden ${isReached ? 'opacity-80' : 'card-hover'}`}>
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3 min-w-0">

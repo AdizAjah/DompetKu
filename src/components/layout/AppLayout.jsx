@@ -5,16 +5,16 @@ import BudgetAlert from '../budget/BudgetAlert';
 
 export default function AppLayout() {
   return (
-    <div className="min-h-screen bg-surface-50 dark:bg-surface-900 transition-colors duration-300">
+    <div className="min-h-screen bg-surface-50 dark:bg-surface-900 transition-colors duration-300 overflow-x-hidden w-full">
       {/* Budget Alert Banner */}
       <BudgetAlert />
 
-      <div className="flex">
+      <div className="flex overflow-x-hidden w-full">
         {/* Desktop Sidebar */}
         <Sidebar />
 
         {/* Main Content */}
-        <main className="flex-1 lg:ml-[280px] min-h-screen pb-20 lg:pb-6">
+        <main className="flex-1 lg:ml-[280px] min-h-screen pb-20 lg:pb-6 overflow-x-hidden min-w-0">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="page-enter">
               <Outlet />

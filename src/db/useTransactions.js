@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import db from './db';
 import { startOfDay, endOfDay, startOfMonth, endOfMonth, startOfWeek, endOfWeek } from 'date-fns';
+import { checkFundBalance } from './fundValidation';
 
 /**
  * Hook: Get all transactions with optional filters
@@ -174,6 +175,9 @@ export function useCategoryBreakdown(date = new Date()) {
 // ========== CRUD Operations ==========
 
 export async function addTransaction(data) {
+  if (data.type === 'expense' && data.fundSourceId) {
+    await checkFundBalance(data.fundSourceId, Number(data.amount));
+  }
   const transaction = {
     ...data,
     amount: Number(data.amount),
@@ -184,6 +188,16 @@ export async function addTransaction(data) {
 }
 
 export async function updateTransaction(id, data) {
+  if (data.type === 'expense' && data.fundSourceId) {
+    const oldTx = await db.transactions.get(id);
+    let amountToCheck = Number(data.amount);
+    if (oldTx && oldTx.type === 'expense' && oldTx.fundSourceId === data.fundSourceId) {
+      amountToCheck -= oldTx.amount;
+    }
+    if (amountToCheck > 0) {
+      await checkFundBalance(data.fundSourceId, amountToCheck);
+    }
+  }
   return await db.transactions.update(id, {
     ...data,
     amount: Number(data.amount)

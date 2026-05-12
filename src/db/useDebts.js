@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import db from './db';
+import { checkFundBalance } from './fundValidation';
 
 /**
  * Hook: Get all debts with optional status filter
@@ -64,8 +65,11 @@ export async function deleteDebt(id) {
   });
 }
 
-export async function addDebtPayment(debtId, amount, note = '') {
+export async function addDebtPayment(debtId, amount, note = '', fundSourceId = null) {
   return await db.transaction('rw', db.debts, db.debtPayments, db.transactions, async () => {
+    if (fundSourceId) {
+      await checkFundBalance(fundSourceId, Number(amount));
+    }
     const now = new Date().toISOString();
 
     // Add payment record
@@ -94,6 +98,7 @@ export async function addDebtPayment(debtId, amount, note = '') {
       amount: Number(amount),
       category: 'Bayar Hutang',
       description: `Bayar hutang ke ${debt.creditorName}${note ? ' — ' + note : ''}`,
+      fundSourceId,
       date: now,
       createdAt: now
     });

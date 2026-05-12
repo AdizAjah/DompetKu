@@ -28,7 +28,7 @@ export default function BalanceCard() {
           <span className="text-sm font-medium text-white/80">Total Saldo</span>
         </div>
         
-        <p className="text-3xl sm:text-4xl font-bold tracking-tight animate-count-up">
+        <p className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight animate-count-up truncate">
           {balance !== undefined ? formatCurrency(balance) : '...'}
         </p>
 

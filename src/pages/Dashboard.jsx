@@ -5,6 +5,7 @@ import SpendingChart from '../components/dashboard/SpendingChart';
 import QuickStats from '../components/dashboard/QuickStats';
 import RecentTransactions from '../components/dashboard/RecentTransactions';
 import SavingsWidget from '../components/dashboard/SavingsWidget';
+import FundSourcesOverview from '../components/dashboard/FundSourcesOverview';
 import Walkthrough from '../components/common/Walkthrough';
 
 const walkthroughSteps = [
@@ -21,6 +22,13 @@ const walkthroughSteps = [
     content:
       'Pantau keuangan bulan ini secara instan: pemasukan, pengeluaran, total hutang, dan tabungan terkumpul — semuanya dalam satu tampilan.',
     position: 'bottom',
+  },
+  {
+    target: '#dashboard-fund-sources',
+    title: '💼 Sumber Dana',
+    content:
+      'Pantau semua sumber dana Anda secara detail, baik tunai maupun rekening bank. Total gabungan juga akan ditampilkan di sini.',
+    position: 'top',
   },
   {
     target: '#dashboard-recent-transactions',
@@ -63,6 +71,9 @@ export default function Dashboard() {
           <SpendingChart />
           <SavingsWidget />
         </div>
+
+        {/* Fund Sources Overview */}
+        <FundSourcesOverview />
 
         {/* Recent Transactions */}
         <RecentTransactions />

@@ -45,18 +45,18 @@ export default function QuickStats() {
   ];
 
   return (
-    <div id="dashboard-quick-stats" className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div id="dashboard-quick-stats" className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
       {stats.map((stat) => {
         const Icon = stat.icon;
         return (
-          <div key={stat.label} className="card card-hover p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <div className={`p-2.5 rounded-xl ${stat.bgIcon}`}>
-                <Icon size={20} className={stat.textColor} />
+          <div key={stat.label} className="card card-hover p-4 sm:p-5 min-w-0 overflow-hidden">
+            <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+              <div className={`p-2 sm:p-2.5 rounded-xl shrink-0 ${stat.bgIcon}`}>
+                <Icon size={18} className={stat.textColor} />
               </div>
-              <span className="text-sm font-medium text-surface-500 dark:text-surface-400">{stat.label}</span>
+              <span className="text-xs sm:text-sm font-medium text-surface-500 dark:text-surface-400 truncate">{stat.label}</span>
             </div>
-            <p className={`text-xl font-bold ${stat.textColor} animate-count-up`}>
+            <p className={`text-base sm:text-xl font-bold ${stat.textColor} animate-count-up truncate`}>
               {formatCurrency(stat.value)}
             </p>
             <p className="text-xs text-surface-400 dark:text-surface-500 mt-1">{stat.sub}</p>

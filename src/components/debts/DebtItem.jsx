@@ -10,7 +10,7 @@ export default function DebtItem({ debt, onEdit, onDelete, onPay }) {
   const isOverdue = debt.dueDate && !isPaid && isPast(parseISO(debt.dueDate));
 
   return (
-    <div className={`card p-5 transition-all ${isPaid ? 'opacity-75' : 'card-hover'}`}>
+    <div className={`card p-5 transition-all overflow-hidden ${isPaid ? 'opacity-75' : 'card-hover'}`}>
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1 min-w-0">

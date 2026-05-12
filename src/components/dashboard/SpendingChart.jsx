@@ -22,7 +22,7 @@ export default function SpendingChart() {
   const data = useWeeklySpending();
 
   return (
-    <div className="card p-6">
+    <div className="card p-6 overflow-hidden">
       <h3 className="text-sm font-semibold text-surface-500 dark:text-surface-400 mb-4">
         Pengeluaran Minggu Ini
       </h3>

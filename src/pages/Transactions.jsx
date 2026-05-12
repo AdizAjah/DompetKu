@@ -5,12 +5,14 @@ import TransactionForm from '../components/transactions/TransactionForm';
 import FAB from '../components/common/FAB';
 import ConfirmDialog from '../components/common/ConfirmDialog';
 import { useTransactions, deleteTransaction } from '../db/useTransactions';
+import { useFundSources } from '../db/useFundSources';
 import { formatCurrency } from '../utils/formatCurrency';
 import { Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function Transactions() {
   const [filter, setFilter] = useState('all'); // all, income, expense
+  const [fundSourceFilter, setFundSourceFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [formType, setFormType] = useState('expense');
@@ -19,9 +21,14 @@ export default function Transactions() {
 
   const typeFilter = filter === 'all' ? undefined : filter;
   const transactions = useTransactions({ type: typeFilter });
+  const fundSources = useFundSources();
 
   // Apply search filter
   const filtered = transactions?.filter(t => {
+    if (fundSourceFilter !== 'all') {
+      if (fundSourceFilter === 'none' && t.fundSourceId) return false;
+      if (fundSourceFilter !== 'none' && t.fundSourceId !== Number(fundSourceFilter)) return false;
+    }
     if (!search) return true;
     const q = search.toLowerCase();
     return (
@@ -74,15 +81,15 @@ export default function Transactions() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 gap-3 mb-6">
-        <div className="card p-4">
+        <div className="card p-4 min-w-0 overflow-hidden">
           <p className="text-xs text-surface-400 dark:text-surface-500 mb-1">Total Masuk</p>
-          <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
+          <p className="text-base sm:text-lg font-bold text-emerald-600 dark:text-emerald-400 truncate">
             +{formatCurrency(totals.income)}
           </p>
         </div>
-        <div className="card p-4">
+        <div className="card p-4 min-w-0 overflow-hidden">
           <p className="text-xs text-surface-400 dark:text-surface-500 mb-1">Total Keluar</p>
-          <p className="text-lg font-bold text-red-500 dark:text-red-400">
+          <p className="text-base sm:text-lg font-bold text-red-500 dark:text-red-400 truncate">
             -{formatCurrency(totals.expense)}
           </p>
         </div>
@@ -111,16 +118,36 @@ export default function Transactions() {
           ))}
         </div>
 
-        {/* Search */}
-        <div className="relative flex-1">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari transaksi..."
-            className="input-field !pl-10 py-2.5"
-          />
+        <div className="flex gap-2 flex-1">
+          {/* Source Filter */}
+          <div className="relative min-w-[130px] sm:min-w-[150px]">
+            <select
+              value={fundSourceFilter}
+              onChange={(e) => setFundSourceFilter(e.target.value)}
+              className="input-field py-2.5 px-3 appearance-none text-sm"
+            >
+              <option value="all">Semua Dana</option>
+              <option value="none">Tanpa Dana</option>
+              {fundSources?.map(s => (
+                <option key={s.id} value={s.id}>{s.name}</option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-surface-500">
+              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
+          </div>
+
+          {/* Search */}
+          <div className="relative flex-1">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-surface-400" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Cari..."
+              className="input-field !pl-9 py-2.5 text-sm"
+            />
+          </div>
         </div>
       </div>
 

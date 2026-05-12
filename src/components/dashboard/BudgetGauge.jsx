@@ -7,6 +7,27 @@ export default function BudgetGauge() {
   const todayExpenses = useTodayExpenses();
   const settings = useSettings();
 
+  const isEnabled = settings?.isBudgetEnabled ?? true;
+
+  if (!isEnabled) {
+    return (
+      <div className="card p-6 flex flex-col items-center justify-center min-h-[260px]">
+        <h3 className="text-sm font-semibold text-surface-500 dark:text-surface-400 w-full text-center mb-4">
+          Kuota Harian
+        </h3>
+        <div className="flex-1 flex flex-col items-center justify-center text-center w-full">
+          <div className="w-16 h-16 rounded-full bg-surface-100 dark:bg-surface-800 flex items-center justify-center mb-3">
+            <span className="text-2xl opacity-50">💤</span>
+          </div>
+          <p className="text-surface-900 dark:text-white font-medium text-sm">Anggaran Nonaktif</p>
+          <p className="text-xs text-surface-500 dark:text-surface-400 mt-1">
+            Aktifkan di pengaturan.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const dailyLimit = settings?.dailyLimit || 50000;
   const remaining = calculateDailyRemaining(dailyLimit, todayExpenses || 0);
   const { status, color, label, percentage } = getBudgetStatus(remaining, dailyLimit);

@@ -12,6 +12,7 @@ export function useSettings() {
       return {
         id: 1,
         dailyLimit: 50000,
+        isBudgetEnabled: true,
         currencySymbol: 'Rp',
         theme: 'dark',
         createdAt: new Date()

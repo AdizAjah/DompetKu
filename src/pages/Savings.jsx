@@ -49,27 +49,27 @@ export default function Savings() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-        <div className="card p-5">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-indigo-500/10 dark:bg-indigo-500/15">
+        <div className="card p-5 overflow-hidden">
+          <div className="flex items-center gap-4 min-w-0">
+            <div className="p-3 rounded-xl bg-indigo-500/10 dark:bg-indigo-500/15 shrink-0">
               <PiggyBank size={24} className="text-indigo-500" />
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-sm text-surface-500 dark:text-surface-400">Total Ditabung</p>
-              <p className="text-2xl font-bold text-surface-900 dark:text-white animate-count-up">
+              <p className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white animate-count-up truncate">
                 {formatCurrency(totalSaved || 0)}
               </p>
             </div>
           </div>
         </div>
-        <div className="card p-5">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-violet-500/10 dark:bg-violet-500/15">
+        <div className="card p-5 overflow-hidden">
+          <div className="flex items-center gap-4 min-w-0">
+            <div className="p-3 rounded-xl bg-violet-500/10 dark:bg-violet-500/15 shrink-0">
               <Target size={24} className="text-violet-500" />
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-sm text-surface-500 dark:text-surface-400">Total Target</p>
-              <p className="text-2xl font-bold text-surface-900 dark:text-white animate-count-up">
+              <p className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white animate-count-up truncate">
                 {formatCurrency(totalTarget)}
               </p>
             </div>

@@ -2,13 +2,16 @@ import { Trash2, Edit3 } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { getCategoryIcon } from '../../utils/categories';
 import { useCategories } from '../../db/useSettings';
+import { useFundSources } from '../../db/useFundSources';
 import { format, parseISO } from 'date-fns';
 
 export default function TransactionItem({ transaction: t, onEdit, onDelete }) {
   const categories = useCategories(t.type);
+  const fundSources = useFundSources();
   const cat = categories?.find(c => c.name === t.category);
   const Icon = getCategoryIcon(cat?.icon);
   const isIncome = t.type === 'income';
+  const fundSource = t.fundSourceId ? fundSources?.find(s => s.id === t.fundSourceId) : null;
 
   return (
     <div className="group flex items-center gap-3 p-3 rounded-xl hover:bg-surface-50 dark:hover:bg-surface-700/30 transition-all">
@@ -25,10 +28,18 @@ export default function TransactionItem({ transaction: t, onEdit, onDelete }) {
         <p className="text-sm font-medium text-surface-800 dark:text-surface-200 truncate">
           {t.description || t.category}
         </p>
-        <div className="flex items-center gap-2 mt-0.5">
+        <div className="flex items-center gap-2 mt-0.5 flex-wrap">
           <span className={`badge text-[10px] py-0.5 px-2 ${isIncome ? 'badge-income' : 'badge-expense'}`}>
             {t.category}
           </span>
+          {fundSource && (
+            <span
+              className="badge badge-fund-source text-[10px] py-0.5 px-2"
+              style={{ backgroundColor: `${fundSource.color}15`, color: fundSource.color }}
+            >
+              {fundSource.name}
+            </span>
+          )}
           <span className="text-[11px] text-surface-400 dark:text-surface-500">
             {t.date ? format(parseISO(t.date), 'HH:mm') : ''}
           </span>

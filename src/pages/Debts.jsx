@@ -47,14 +47,14 @@ export default function Debts() {
       />
 
       {/* Total Debt Card */}
-      <div className="card p-5 mb-6">
-        <div className="flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-amber-500/10 dark:bg-amber-500/15">
+      <div className="card p-5 mb-6 overflow-hidden">
+        <div className="flex items-center gap-4 min-w-0">
+          <div className="p-3 rounded-xl bg-amber-500/10 dark:bg-amber-500/15 shrink-0">
             <Landmark size={24} className="text-amber-500" />
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="text-sm text-surface-500 dark:text-surface-400">Total Hutang Aktif</p>
-            <p className="text-2xl font-bold text-surface-900 dark:text-white animate-count-up">
+            <p className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white animate-count-up truncate">
               {formatCurrency(totalDebt || 0)}
             </p>
           </div>

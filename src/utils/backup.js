@@ -162,12 +162,13 @@ export async function importData(file) {
  */
 export async function clearAllData() {
   try {
-    await db.transaction('rw', db.transactions, db.debts, db.debtPayments, db.savings, db.savingsDeposits, async () => {
+    await db.transaction('rw', db.transactions, db.debts, db.debtPayments, db.savings, db.savingsDeposits, db.fundSources, async () => {
       await db.transactions.clear();
       await db.debts.clear();
       await db.debtPayments.clear();
       await db.savings.clear();
       await db.savingsDeposits.clear();
+      await db.fundSources.clear();
     });
     return { success: true, message: 'Semua data berhasil dihapus.' };
   } catch (error) {

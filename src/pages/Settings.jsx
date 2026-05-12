@@ -82,9 +82,28 @@ export default function Settings() {
       <div className="space-y-6 max-w-2xl">
         {/* Daily Limit */}
         <Section icon={Wallet} title="Anggaran Harian">
-          <p className="text-sm text-surface-500 dark:text-surface-400">Batas maksimal pengeluaran per hari</p>
-          <CurrencyInput value={settings?.dailyLimit || 50000} onChange={handleDailyLimitChange} />
-          <p className="text-xs text-surface-400">Saat ini: {formatCurrency(settings?.dailyLimit || 50000)}/hari</p>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm font-medium text-surface-700 dark:text-surface-300">Aktifkan Anggaran Harian</p>
+            <button 
+              type="button"
+              onClick={() => updateSettings({ isBudgetEnabled: !(settings?.isBudgetEnabled ?? true) })}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-surface-900 ${
+                (settings?.isBudgetEnabled ?? true) ? 'bg-primary-500' : 'bg-surface-300 dark:bg-surface-600'
+              }`}
+            >
+              <span className="sr-only">Toggle Budget</span>
+              <span className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                (settings?.isBudgetEnabled ?? true) ? 'translate-x-6' : 'translate-x-1'
+              }`} />
+            </button>
+          </div>
+          {(settings?.isBudgetEnabled ?? true) && (
+            <div className="pt-2 border-t border-surface-100 dark:border-surface-800">
+              <p className="text-sm text-surface-500 dark:text-surface-400 mb-3">Batas maksimal pengeluaran per hari</p>
+              <CurrencyInput value={settings?.dailyLimit || 50000} onChange={handleDailyLimitChange} />
+              <p className="text-xs text-surface-400 mt-2">Saat ini: {formatCurrency(settings?.dailyLimit || 50000)}/hari</p>
+            </div>
+          )}
         </Section>
 
         {/* Theme */}

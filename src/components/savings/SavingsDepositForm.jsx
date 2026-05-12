@@ -2,13 +2,18 @@ import { useState } from 'react';
 import Modal from '../common/Modal';
 import CurrencyInput from '../common/CurrencyInput';
 import { addSavingsDeposit, withdrawSavings } from '../../db/useSavings';
+import { useFundSourceTotals } from '../../db/useFundSources';
 import { formatCurrency } from '../../utils/formatCurrency';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Wallet, ChevronDown, MoreHorizontal } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function SavingsDepositForm({ isOpen, onClose, goal, mode = 'deposit' }) {
   const [amount, setAmount] = useState(0);
   const [note, setNote] = useState('');
+  const [fundSourceId, setFundSourceId] = useState(null);
+  const [showSourcePicker, setShowSourcePicker] = useState(false);
+
+  const fundSources = useFundSourceTotals();
 
   if (!goal) return null;
 
@@ -33,25 +38,37 @@ export default function SavingsDepositForm({ isOpen, onClose, goal, mode = 'depo
       return;
     }
 
+    // Validation logic for fund source balance if deposit
+    if (isDeposit && fundSourceId) {
+      const source = fundSources?.find(s => s.id === fundSourceId);
+      if (source && source.balance < amount) {
+        toast.error(`Saldo sumber dana tidak mencukupi (${formatCurrency(source.balance)})`);
+        return;
+      }
+    }
+
     try {
       if (isDeposit) {
-        await addSavingsDeposit(goal.id, amount, note.trim());
+        await addSavingsDeposit(goal.id, amount, note.trim(), fundSourceId);
         if (amount >= remaining) {
           toast.success('🎉 Target tabungan tercapai!');
         } else {
           toast.success('Tabungan ditambahkan!');
         }
       } else {
-        await withdrawSavings(goal.id, amount, note.trim());
+        await withdrawSavings(goal.id, amount, note.trim(), fundSourceId);
         toast.success('Penarikan berhasil');
       }
       setAmount(0);
       setNote('');
+      setFundSourceId(null);
       onClose();
     } catch (error) {
       toast.error('Gagal: ' + error.message);
     }
   };
+
+  const selectedSource = fundSources?.find(s => s.id === fundSourceId);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={isDeposit ? 'Tabung Dana' : 'Tarik Dana'} size="sm">
@@ -116,6 +133,81 @@ export default function SavingsDepositForm({ isOpen, onClose, goal, mode = 'depo
             </button>
           )}
         </div>
+
+        {/* Fund Source Selector */}
+        {fundSources && fundSources.length > 0 && (
+          <div>
+            <label className="block text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">
+              {isDeposit ? 'Sumber Dana (opsional)' : 'Tujuan Dana (opsional)'}
+            </label>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowSourcePicker(!showSourcePicker)}
+                className="input-field flex items-center gap-3 cursor-pointer text-left"
+              >
+                {selectedSource ? (
+                  <>
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+                      style={{ backgroundColor: `${selectedSource.color}20` }}>
+                      <Wallet size={14} style={{ color: selectedSource.color }} />
+                    </div>
+                    <span className="flex-1 truncate text-surface-800 dark:text-surface-200">
+                      {selectedSource.name}
+                    </span>
+                    <span className="text-xs font-medium text-surface-500">
+                      {formatCurrency(selectedSource.balance)}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-7 h-7 rounded-lg bg-surface-200 dark:bg-surface-600 flex items-center justify-center shrink-0">
+                      <Wallet size={14} className="text-surface-400" />
+                    </div>
+                    <span className="flex-1 text-surface-400">
+                      Pilih {isDeposit ? 'sumber' : 'tujuan'} dana...
+                    </span>
+                  </>
+                )}
+                <ChevronDown size={16} className={`text-surface-400 transition-transform ${showSourcePicker ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Dropdown */}
+              {showSourcePicker && (
+                <div className="absolute top-full left-0 right-0 mt-1 z-20 bg-white dark:bg-surface-800 border border-surface-200 dark:border-surface-700 rounded-xl shadow-xl overflow-hidden animate-scale-in max-h-60 overflow-y-auto">
+                  <button
+                    type="button"
+                    onClick={() => { setFundSourceId(null); setShowSourcePicker(false); }}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-50 dark:hover:bg-surface-700/50 ${!fundSourceId ? 'bg-primary-50 dark:bg-primary-900/20' : ''}`}
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-surface-200 dark:bg-surface-600 flex items-center justify-center">
+                      <MoreHorizontal size={14} className="text-surface-400" />
+                    </div>
+                    <span className="text-sm text-surface-600 dark:text-surface-400">Tanpa sumber dana</span>
+                  </button>
+
+                  {fundSources.map(source => (
+                    <button
+                      key={source.id}
+                      type="button"
+                      onClick={() => { setFundSourceId(source.id); setShowSourcePicker(false); }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-50 dark:hover:bg-surface-700/50 ${fundSourceId === source.id ? 'bg-primary-50 dark:bg-primary-900/20' : ''}`}
+                    >
+                      <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+                        style={{ backgroundColor: `${source.color}20` }}>
+                        <Wallet size={14} style={{ color: source.color }} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-surface-800 dark:text-surface-200 truncate">{source.name}</p>
+                        <p className="text-[11px] text-surface-400">Saldo: {formatCurrency(source.balance)}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Note */}
         <div>

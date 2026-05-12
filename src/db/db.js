@@ -21,6 +21,18 @@ db.version(2).stores({
   savingsDeposits: '++id, savingsId, amount, date, note'
 });
 
+// Version 3: Add fund sources & link to transactions
+db.version(3).stores({
+  transactions: '++id, type, category, date, amount, description, fundSourceId, createdAt',
+  debts: '++id, creditorName, totalAmount, paidAmount, dueDate, status, createdAt',
+  debtPayments: '++id, debtId, amount, date, note',
+  settings: 'id',
+  categories: '++id, name, icon, color, type',
+  savings: '++id, name, targetAmount, savedAmount, targetDate, status, color, createdAt',
+  savingsDeposits: '++id, savingsId, amount, date, note',
+  fundSources: '++id, name, type, bankName, accountNumber, color, isDefault, createdAt'
+});
+
 // Seed default data on first open
 db.on('populate', () => {
   // Default settings

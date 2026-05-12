@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
 import Debts from './pages/Debts';
 import Savings from './pages/Savings';
+import FundSources from './pages/FundSources';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import { useTheme } from './hooks/useTheme';
@@ -21,6 +22,7 @@ function AppContent() {
           <Route path="transactions" element={<Transactions />} />
           <Route path="debts" element={<Debts />} />
           <Route path="savings" element={<Savings />} />
+          <Route path="fund-sources" element={<FundSources />} />
           <Route path="reports" element={<Reports />} />
           <Route path="settings" element={<Settings />} />
         </Route>

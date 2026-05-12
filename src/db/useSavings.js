@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import db from './db';
+import { checkFundBalance } from './fundValidation';
 import { differenceInDays, parseISO } from 'date-fns';
 
 /**
@@ -109,8 +110,11 @@ export async function deleteSavingsGoal(id) {
 /**
  * Add a deposit to a savings goal — also creates an expense transaction to reduce balance
  */
-export async function addSavingsDeposit(savingsId, amount, note = '') {
+export async function addSavingsDeposit(savingsId, amount, note = '', fundSourceId = null) {
   return await db.transaction('rw', db.savings, db.savingsDeposits, db.transactions, async () => {
+    if (fundSourceId) {
+      await checkFundBalance(fundSourceId, Number(amount));
+    }
     const now = new Date().toISOString();
 
     // Record the deposit
@@ -139,6 +143,7 @@ export async function addSavingsDeposit(savingsId, amount, note = '') {
       amount: Number(amount),
       category: 'Tabungan',
       description: `Menabung untuk "${goal.name}"${note ? ' — ' + note : ''}`,
+      fundSourceId,
       date: now,
       createdAt: now
     });
@@ -148,7 +153,7 @@ export async function addSavingsDeposit(savingsId, amount, note = '') {
 /**
  * Withdraw from a savings goal — creates income transaction to restore balance
  */
-export async function withdrawSavings(savingsId, amount, note = '') {
+export async function withdrawSavings(savingsId, amount, note = '', fundSourceId = null) {
   return await db.transaction('rw', db.savings, db.savingsDeposits, db.transactions, async () => {
     const now = new Date().toISOString();
 
@@ -174,6 +179,7 @@ export async function withdrawSavings(savingsId, amount, note = '') {
       amount: Number(amount),
       category: 'Lainnya',
       description: `Penarikan tabungan "${goal.name}"${note ? ' — ' + note : ''}`,
+      fundSourceId,
       date: now,
       createdAt: now
     });
