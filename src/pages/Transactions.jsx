@@ -7,7 +7,7 @@ import ConfirmDialog from '../components/common/ConfirmDialog';
 import { useTransactions, deleteTransaction } from '../db/useTransactions';
 import { useFundSources } from '../db/useFundSources';
 import { formatCurrency } from '../utils/formatCurrency';
-import { Search } from 'lucide-react';
+import { Search, ArrowDownLeft, ArrowUpRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function Transactions() {
@@ -159,7 +159,12 @@ export default function Transactions() {
       />
 
       {/* FAB */}
-      <FAB onAddIncome={handleAddIncome} onAddExpense={handleAddExpense} />
+      <FAB
+        actions={[
+          { label: 'Pemasukan', icon: <ArrowDownLeft size={18} />, onClick: handleAddIncome, colorClass: 'bg-primary-500 hover:bg-primary-600' },
+          { label: 'Pengeluaran', icon: <ArrowUpRight size={18} />, onClick: handleAddExpense, colorClass: 'bg-red-500 hover:bg-red-600' }
+        ]}
+      />
 
       {/* Transaction Form Modal */}
       <TransactionForm

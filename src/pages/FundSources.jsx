@@ -4,6 +4,7 @@ import FundSourceCard from '../components/fundSources/FundSourceCard';
 import FundSourceForm from '../components/fundSources/FundSourceForm';
 import ConfirmDialog from '../components/common/ConfirmDialog';
 import EmptyState from '../components/common/EmptyState';
+import FAB from '../components/common/FAB';
 import { useFundSources, useFundSourceTotals, deleteFundSource } from '../db/useFundSources';
 import { formatCurrency } from '../utils/formatCurrency';
 import { Plus, Wallet, Banknote, TrendingUp, TrendingDown } from 'lucide-react';
@@ -117,14 +118,8 @@ export default function FundSources() {
         )}
       </div>
 
-      {/* Add Button */}
-      <button
-        onClick={handleAdd}
-        className="btn btn-primary w-full mt-6 py-3.5"
-      >
-        <Plus size={18} />
-        Tambah Sumber Dana
-      </button>
+      {/* FAB */}
+      <FAB onClick={handleAdd} ariaLabel="Tambah Sumber Dana" />
 
       {/* Form Modal */}
       <FundSourceForm

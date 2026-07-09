@@ -4,6 +4,7 @@ import SavingsList from '../components/savings/SavingsList';
 import SavingsForm from '../components/savings/SavingsForm';
 import SavingsDepositForm from '../components/savings/SavingsDepositForm';
 import ConfirmDialog from '../components/common/ConfirmDialog';
+import FAB from '../components/common/FAB';
 import { useSavings, useTotalSaved, deleteSavingsGoal } from '../db/useSavings';
 import { formatCurrency } from '../utils/formatCurrency';
 import { Plus, PiggyBank, Target } from 'lucide-react';
@@ -39,12 +40,6 @@ export default function Savings() {
       <Header
         title="Tabungan"
         subtitle="Kelola target tabunganmu"
-        action={
-          <button onClick={() => { setEditData(null); setShowForm(true); }} className="btn btn-primary">
-            <Plus size={18} />
-            <span className="hidden sm:inline">Target Baru</span>
-          </button>
-        }
       />
 
       {/* Summary Cards */}
@@ -110,6 +105,8 @@ export default function Savings() {
 
       <ConfirmDialog isOpen={!!deleteId} onConfirm={handleDelete} onCancel={() => setDeleteId(null)}
         title="Hapus Target?" message="Target dan riwayat tabungannya akan dihapus permanen." confirmText="Ya, Hapus" />
+
+      <FAB onClick={() => { setEditData(null); setShowForm(true); }} ariaLabel="Target Baru" />
     </div>
   );
 }

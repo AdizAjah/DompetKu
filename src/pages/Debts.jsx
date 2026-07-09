@@ -4,6 +4,7 @@ import DebtList from '../components/debts/DebtList';
 import DebtForm from '../components/debts/DebtForm';
 import DebtPaymentForm from '../components/debts/DebtPaymentForm';
 import ConfirmDialog from '../components/common/ConfirmDialog';
+import FAB from '../components/common/FAB';
 import { useDebts, useTotalDebt, deleteDebt } from '../db/useDebts';
 import { formatCurrency } from '../utils/formatCurrency';
 import { Plus, Landmark } from 'lucide-react';
@@ -35,15 +36,6 @@ export default function Debts() {
       <Header
         title="Hutang"
         subtitle="Pantau kewajiban finansialmu"
-        action={
-          <button
-            onClick={() => { setEditData(null); setShowForm(true); }}
-            className="btn btn-primary"
-          >
-            <Plus size={18} />
-            <span className="hidden sm:inline">Tambah Hutang</span>
-          </button>
-        }
       />
 
       {/* Total Debt Card */}
@@ -101,6 +93,8 @@ export default function Debts() {
         onClose={() => setPayDebt(null)}
         debt={payDebt}
       />
+
+      <FAB onClick={() => { setEditData(null); setShowForm(true); }} ariaLabel="Tambah Hutang" />
 
       {/* Delete Confirmation */}
       <ConfirmDialog
