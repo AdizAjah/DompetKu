@@ -1,4 +1,5 @@
 import { formatDate } from '../../utils/dateHelpers';
+import PropTypes from 'prop-types';
 
 export default function Header({ title, subtitle, action }) {
   return (
@@ -19,3 +20,9 @@ export default function Header({ title, subtitle, action }) {
     </div>
   );
 }
+
+Header.propTypes = {
+  title: PropTypes.string.isRequired,
+  subtitle: PropTypes.string,
+  action: PropTypes.element
+};

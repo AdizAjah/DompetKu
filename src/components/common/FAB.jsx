@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Plus, X } from 'lucide-react';
+import PropTypes from 'prop-types';
 
 export default function FAB({ actions, onClick, icon, ariaLabel = "Tambah" }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,3 +49,17 @@ export default function FAB({ actions, onClick, icon, ariaLabel = "Tambah" }) {
     </div>
   );
 }
+
+FAB.propTypes = {
+  actions: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      icon: PropTypes.element.isRequired,
+      onClick: PropTypes.func.isRequired,
+      colorClass: PropTypes.string
+    })
+  ),
+  onClick: PropTypes.func,
+  icon: PropTypes.element,
+  ariaLabel: PropTypes.string
+};
