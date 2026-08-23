@@ -14,7 +14,7 @@ export default function AppLayout() {
         <Sidebar />
 
         {/* Main Content */}
-        <main className="flex-1 lg:ml-[280px] min-h-screen pb-20 lg:pb-6 overflow-x-hidden min-w-0">
+        <main className="flex-1 lg:ml-[280px] min-h-screen pb-40 lg:pb-24 overflow-x-hidden min-w-0">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="page-enter">
               <Outlet />

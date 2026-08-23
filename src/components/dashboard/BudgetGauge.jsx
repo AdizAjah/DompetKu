@@ -17,7 +17,7 @@ export default function BudgetGauge() {
 
   if (!isEnabled) {
     return (
-      <div className="card p-6 flex flex-col items-center justify-center min-h-[260px]">
+      <div className="card p-4 sm:p-6 flex flex-col items-center justify-center h-full min-h-[160px] sm:min-h-[260px]">
         <h3 className="text-sm font-semibold text-surface-500 dark:text-surface-400 w-full text-center mb-4">
           Batas Aman Harian
         </h3>
@@ -42,7 +42,7 @@ export default function BudgetGauge() {
 
   if (targetPassed) {
     return (
-      <div className="card p-6 flex flex-col items-center justify-center min-h-[260px]">
+      <div className="card p-4 sm:p-6 flex flex-col items-center justify-center h-full min-h-[160px] sm:min-h-[260px]">
         <h3 className="text-sm font-semibold text-surface-500 dark:text-surface-400 w-full text-center mb-4">
           Batas Aman Harian
         </h3>
@@ -66,7 +66,7 @@ export default function BudgetGauge() {
 
   if (balanceNegative) {
     return (
-      <div className="card p-6 flex flex-col items-center justify-center min-h-[260px]">
+      <div className="card p-4 sm:p-6 flex flex-col items-center justify-center h-full min-h-[160px] sm:min-h-[260px]">
         <h3 className="text-sm font-semibold text-surface-500 dark:text-surface-400 w-full text-center mb-4">
           Batas Aman Harian
         </h3>
@@ -97,19 +97,19 @@ export default function BudgetGauge() {
   const offset = circumference - (Math.min(percentage, 100) / 100) * circumference;
 
   return (
-    <div className="card p-6 flex flex-col items-center">
-      <div className="w-full flex items-center justify-center mb-1">
+    <div className="card p-4 sm:p-6 flex flex-col items-center justify-center h-full">
+      <div className="w-full flex items-center justify-center mb-4 sm:mb-1">
         <h3 className="text-sm font-semibold text-surface-500 dark:text-surface-400">
           Batas Aman Harian
         </h3>
       </div>
-      <p className="text-[10px] text-surface-400 text-center mb-4 leading-tight">
+      <p className="hidden sm:block text-[10px] text-surface-400 text-center sm:mb-4 leading-tight">
         Pengganti Kuota Harian. <br/>Membantu pengeluaranmu aman sampai target.
       </p>
       
-      <div className="relative" style={{ width: size, height: size }}>
+      <div className="relative w-32 h-32 sm:w-40 sm:h-40">
         {/* Background circle */}
-        <svg width={size} height={size} className="transform -rotate-90">
+        <svg viewBox={`0 0 ${size} ${size}`} className="w-full h-full transform -rotate-90">
           <circle
             cx={size / 2}
             cy={size / 2}
@@ -136,10 +136,10 @@ export default function BudgetGauge() {
         
         {/* Center text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-2xl font-bold text-surface-900 dark:text-white">
+          <span className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white">
             {Math.round(percentage)}%
           </span>
-          <span className="text-xs font-medium" style={{ color }}>
+          <span className="text-[10px] sm:text-xs font-medium" style={{ color }}>
             {label}
           </span>
         </div>
