@@ -49,35 +49,47 @@ export default function FundSources() {
       <Header title="Sumber Dana" subtitle="Kelola sumber pembayaran" />
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="card p-4 min-w-0 overflow-hidden">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-7 h-7 rounded-lg bg-primary-500/15 flex items-center justify-center">
-              <Wallet size={14} className="text-primary-600 dark:text-primary-400" />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div className="card p-5 overflow-hidden">
+          <div className="flex items-center gap-4 min-w-0">
+            <div className="p-3 rounded-xl bg-primary-500/10 dark:bg-primary-500/15 shrink-0">
+              <Wallet size={24} className="text-primary-500" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm text-surface-500 dark:text-surface-400">Total Sumber</p>
+              <p className="text-xl sm:text-2xl font-bold text-surface-900 dark:text-white truncate">
+                {totalSources}
+              </p>
             </div>
           </div>
-          <p className="text-[11px] text-surface-400 dark:text-surface-500 mb-0.5">Total Sumber</p>
-          <p className="text-lg font-bold text-surface-800 dark:text-surface-200">{totalSources}</p>
         </div>
 
-        <div className="card p-4 min-w-0 overflow-hidden">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-7 h-7 rounded-lg bg-emerald-500/15 flex items-center justify-center">
-              <TrendingUp size={14} className="text-emerald-600 dark:text-emerald-400" />
+        <div className="card p-5 overflow-hidden">
+          <div className="flex items-center gap-4 min-w-0">
+            <div className="p-3 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/15 shrink-0">
+              <TrendingUp size={24} className="text-emerald-500" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm text-surface-500 dark:text-surface-400">Total Masuk</p>
+              <p className="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400 truncate">
+                {formatCurrency(totalIncome)}
+              </p>
             </div>
           </div>
-          <p className="text-[11px] text-surface-400 dark:text-surface-500 mb-0.5">Total Masuk</p>
-          <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400 truncate">{formatCurrency(totalIncome)}</p>
         </div>
 
-        <div className="card p-4 min-w-0 overflow-hidden">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-7 h-7 rounded-lg bg-red-500/15 flex items-center justify-center">
-              <TrendingDown size={14} className="text-red-500 dark:text-red-400" />
+        <div className="card p-5 overflow-hidden">
+          <div className="flex items-center gap-4 min-w-0">
+            <div className="p-3 rounded-xl bg-red-500/10 dark:bg-red-500/15 shrink-0">
+              <TrendingDown size={24} className="text-red-500" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm text-surface-500 dark:text-surface-400">Total Keluar</p>
+              <p className="text-xl sm:text-2xl font-bold text-red-500 dark:text-red-400 truncate">
+                {formatCurrency(totalExpense)}
+              </p>
             </div>
           </div>
-          <p className="text-[11px] text-surface-400 dark:text-surface-500 mb-0.5">Total Keluar</p>
-          <p className="text-sm font-bold text-red-500 dark:text-red-400 truncate">{formatCurrency(totalExpense)}</p>
         </div>
       </div>
 
@@ -99,8 +111,9 @@ export default function FundSources() {
           </div>
         ) : sources.length === 0 ? (
           <EmptyState
-            icon="Wallet"
-            message="Belum ada sumber dana. Tambahkan rekening bank, kas tunai, atau e-wallet untuk mulai melacak arus kas."
+            icon={Wallet}
+            title="Belum ada sumber dana"
+            description="Tambahkan rekening bank, kas tunai, atau e-wallet untuk mulai melacak arus kas."
           />
         ) : (
           sources.map(source => {

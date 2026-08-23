@@ -85,7 +85,7 @@ export default function FundSourceCard({ source, stats, onEdit, onDelete }) {
       </div>
 
       {/* Actions */}
-      <div className="hidden group-hover:flex items-center gap-1 shrink-0">
+      <div className="flex lg:hidden lg:group-hover:flex items-center gap-1 shrink-0">
         <button
           onClick={() => onEdit(source)}
           className="p-2 rounded-lg hover:bg-surface-200 dark:hover:bg-surface-600 text-surface-400 hover:text-surface-600 dark:hover:text-surface-300 transition-colors"

@@ -39,6 +39,8 @@ db.on('populate', () => {
   db.settings.add({
     id: 1,
     dailyLimit: 50000,
+    budgetMode: 'otomatis',
+    targetDate: null,
     currencySymbol: 'Rp',
     theme: 'dark',
     createdAt: new Date()

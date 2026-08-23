@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Header from '../components/layout/Header';
 import BalanceCard from '../components/dashboard/BalanceCard';
 import BudgetGauge from '../components/dashboard/BudgetGauge';
@@ -48,6 +49,25 @@ const walkthroughSteps = [
 ];
 
 export default function Dashboard() {
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
+
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const steps = walkthroughSteps.map(step => {
+    if (step.title === '🧭 Navigasi Utama') {
+      return {
+        ...step,
+        target: isDesktop ? '#sidebar-navigation' : '#bottom-navigation',
+        position: isDesktop ? 'right' : 'top'
+      };
+    }
+    return step;
+  });
+
   return (
     <div>
       <Header title="Dashboard" />
@@ -80,7 +100,7 @@ export default function Dashboard() {
       </div>
 
       {/* Onboarding Walkthrough */}
-      <Walkthrough steps={walkthroughSteps} />
+      <Walkthrough steps={steps} />
     </div>
   );
 }

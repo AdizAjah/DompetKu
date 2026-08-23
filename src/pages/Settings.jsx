@@ -11,6 +11,9 @@ import { getCategoryIcon, availableIcons, availableColors } from '../utils/categ
 import { Download, Upload, Trash2, Moon, Sun, Monitor, Plus, X, Palette, Tag, Wallet, SwatchBook, HardDrive, ShieldAlert, Lock, Info, RotateCcw, BookOpen } from 'lucide-react';
 import Modal from '../components/common/Modal';
 import toast from 'react-hot-toast';
+import { useTotalBalance } from '../db/useTransactions';
+import { useTotalSaved } from '../db/useSavings';
+import { getAvailableBalance, getRemainingDays, getDailySafeLimit } from '../utils/financialCalculator';
 
 const Section = ({ icon: Icon, title, children }) => (
   <div className="card p-6 space-y-4">
@@ -35,6 +38,12 @@ export default function Settings() {
   const [newCatName, setNewCatName] = useState('');
   const [newCatIcon, setNewCatIcon] = useState('Tag');
   const [newCatColor, setNewCatColor] = useState('#10b981');
+
+  const totalBalance = useTotalBalance();
+  const totalSaved = useTotalSaved();
+  const availableBalance = getAvailableBalance(totalBalance, totalSaved);
+  const remainingDays = getRemainingDays(settings?.targetDate);
+  const safeDailyLimit = getDailySafeLimit(availableBalance, remainingDays, settings?.budgetMode || 'otomatis', settings?.dailyLimit || 50000);
 
   const handleDailyLimitChange = async (value) => {
     await updateSettings({ dailyLimit: value });
@@ -81,9 +90,9 @@ export default function Settings() {
       <Header title="Pengaturan" subtitle="Kustomisasi aplikasimu" />
       <div className="space-y-6 max-w-2xl">
         {/* Daily Limit */}
-        <Section icon={Wallet} title="Anggaran Harian">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium text-surface-700 dark:text-surface-300">Aktifkan Anggaran Harian</p>
+        <Section icon={Wallet} title="Anggaran & Perencanaan">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm font-medium text-surface-700 dark:text-surface-300">Aktifkan Batas Aman Harian</p>
             <button 
               type="button"
               onClick={() => updateSettings({ isBudgetEnabled: !(settings?.isBudgetEnabled ?? true) })}
@@ -97,11 +106,70 @@ export default function Settings() {
               }`} />
             </button>
           </div>
+          
           {(settings?.isBudgetEnabled ?? true) && (
-            <div className="pt-2 border-t border-surface-100 dark:border-surface-800">
-              <p className="text-sm text-surface-500 dark:text-surface-400 mb-3">Batas maksimal pengeluaran per hari</p>
-              <CurrencyInput value={settings?.dailyLimit || 50000} onChange={handleDailyLimitChange} />
-              <p className="text-xs text-surface-400 mt-2">Saat ini: {formatCurrency(settings?.dailyLimit || 50000)}/hari</p>
+            <div className="pt-4 border-t border-surface-100 dark:border-surface-800 space-y-4">
+              
+              <div>
+                <p className="text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">Mode Perhitungan</p>
+                <div className="flex bg-surface-100 dark:bg-surface-800 rounded-lg p-1">
+                  <button
+                    onClick={() => updateSettings({ budgetMode: 'otomatis' })}
+                    className={`flex-1 py-1.5 text-sm rounded-md transition-all ${
+                      (settings?.budgetMode || 'otomatis') === 'otomatis' 
+                        ? 'bg-white dark:bg-surface-600 shadow-sm text-primary-600 dark:text-primary-400 font-medium' 
+                        : 'text-surface-500 dark:text-surface-400 hover:text-surface-700 dark:hover:text-surface-200'
+                    }`}
+                  >
+                    Otomatis
+                  </button>
+                  <button
+                    onClick={() => updateSettings({ budgetMode: 'manual' })}
+                    className={`flex-1 py-1.5 text-sm rounded-md transition-all ${
+                      (settings?.budgetMode || 'otomatis') === 'manual' 
+                        ? 'bg-white dark:bg-surface-600 shadow-sm text-primary-600 dark:text-primary-400 font-medium' 
+                        : 'text-surface-500 dark:text-surface-400 hover:text-surface-700 dark:hover:text-surface-200'
+                    }`}
+                  >
+                    Manual
+                  </button>
+                </div>
+              </div>
+
+              {(settings?.budgetMode || 'otomatis') === 'otomatis' ? (
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm font-medium text-surface-700 dark:text-surface-300 mb-2">Target uang bertahan sampai</p>
+                    <input 
+                      type="date"
+                      value={settings?.targetDate ? settings.targetDate.split('T')[0] : ''}
+                      onChange={(e) => updateSettings({ targetDate: e.target.value ? new Date(e.target.value).toISOString() : null })}
+                      className="input-field"
+                    />
+                  </div>
+                  
+                  <div className="bg-surface-50 dark:bg-surface-800/50 p-4 rounded-xl space-y-3">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-surface-500 dark:text-surface-400">Saldo tersedia</span>
+                      <span className="font-medium text-surface-900 dark:text-white">{formatCurrency(availableBalance)}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-surface-500 dark:text-surface-400">Sisa hari</span>
+                      <span className="font-medium text-surface-900 dark:text-white">{remainingDays > 0 ? `${remainingDays} hari` : '-'}</span>
+                    </div>
+                    <div className="pt-3 border-t border-surface-200 dark:border-surface-700 flex justify-between items-center">
+                      <span className="text-sm font-medium text-surface-700 dark:text-surface-300">Batas Aman Hari Ini</span>
+                      <span className="text-base font-bold text-primary-600 dark:text-primary-400">{formatCurrency(safeDailyLimit)} / hari</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-sm text-surface-500 dark:text-surface-400 mb-3">Batas maksimal pengeluaran per hari</p>
+                  <CurrencyInput value={settings?.dailyLimit || 50000} onChange={handleDailyLimitChange} />
+                  <p className="text-xs text-surface-400 mt-2">Saat ini: {formatCurrency(settings?.dailyLimit || 50000)}/hari</p>
+                </div>
+              )}
             </div>
           )}
         </Section>

@@ -13,6 +13,8 @@ export function useSettings() {
         id: 1,
         dailyLimit: 50000,
         isBudgetEnabled: true,
+        budgetMode: 'otomatis',
+        targetDate: null,
         currencySymbol: 'Rp',
         theme: 'dark',
         createdAt: new Date()

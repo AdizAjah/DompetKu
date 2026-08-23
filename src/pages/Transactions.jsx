@@ -7,7 +7,7 @@ import ConfirmDialog from '../components/common/ConfirmDialog';
 import { useTransactions, deleteTransaction } from '../db/useTransactions';
 import { useFundSources } from '../db/useFundSources';
 import { formatCurrency } from '../utils/formatCurrency';
-import { Search, ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { Search, ArrowDownLeft, ArrowUpRight, TrendingUp, TrendingDown } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function Transactions() {
@@ -80,18 +80,32 @@ export default function Transactions() {
       <Header title="Transaksi" subtitle="Kelola pemasukan & pengeluaran" />
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        <div className="card p-4 min-w-0 overflow-hidden">
-          <p className="text-xs text-surface-400 dark:text-surface-500 mb-1">Total Masuk</p>
-          <p className="text-base sm:text-lg font-bold text-emerald-600 dark:text-emerald-400 truncate">
-            +{formatCurrency(totals.income)}
-          </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div className="card p-5 overflow-hidden">
+          <div className="flex items-center gap-4 min-w-0">
+            <div className="p-3 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/15 shrink-0">
+              <TrendingUp size={24} className="text-emerald-500" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm text-surface-500 dark:text-surface-400">Total Masuk</p>
+              <p className="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400 truncate">
+                +{formatCurrency(totals.income)}
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="card p-4 min-w-0 overflow-hidden">
-          <p className="text-xs text-surface-400 dark:text-surface-500 mb-1">Total Keluar</p>
-          <p className="text-base sm:text-lg font-bold text-red-500 dark:text-red-400 truncate">
-            -{formatCurrency(totals.expense)}
-          </p>
+        <div className="card p-5 overflow-hidden">
+          <div className="flex items-center gap-4 min-w-0">
+            <div className="p-3 rounded-xl bg-red-500/10 dark:bg-red-500/15 shrink-0">
+              <TrendingDown size={24} className="text-red-500" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm text-surface-500 dark:text-surface-400">Total Keluar</p>
+              <p className="text-xl sm:text-2xl font-bold text-red-500 dark:text-red-400 truncate">
+                -{formatCurrency(totals.expense)}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 

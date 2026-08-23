@@ -1,10 +1,16 @@
-import { useTodayExpenses } from '../../db/useTransactions';
+import { useTodayExpenses, useTotalBalance } from '../../db/useTransactions';
+import { useTotalSaved } from '../../db/useSavings';
 import { useSettings } from '../../db/useSettings';
 import { calculateDailyRemaining, getBudgetStatus } from '../../utils/budgetCalculator';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { getAvailableBalance, getRemainingDays, getDailySafeLimit } from '../../utils/financialCalculator';
+import { Info } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function BudgetGauge() {
   const todayExpenses = useTodayExpenses();
+  const totalBalance = useTotalBalance();
+  const totalSaved = useTotalSaved();
   const settings = useSettings();
 
   const isEnabled = settings?.isBudgetEnabled ?? true;
@@ -13,7 +19,7 @@ export default function BudgetGauge() {
     return (
       <div className="card p-6 flex flex-col items-center justify-center min-h-[260px]">
         <h3 className="text-sm font-semibold text-surface-500 dark:text-surface-400 w-full text-center mb-4">
-          Kuota Harian
+          Batas Aman Harian
         </h3>
         <div className="flex-1 flex flex-col items-center justify-center text-center w-full">
           <div className="w-16 h-16 rounded-full bg-surface-100 dark:bg-surface-800 flex items-center justify-center mb-3">
@@ -28,7 +34,58 @@ export default function BudgetGauge() {
     );
   }
 
-  const dailyLimit = settings?.dailyLimit || 50000;
+  const budgetMode = settings?.budgetMode || 'otomatis';
+  const availableBalance = getAvailableBalance(totalBalance, totalSaved);
+  const remainingDays = getRemainingDays(settings?.targetDate);
+  const targetPassed = budgetMode === 'otomatis' && remainingDays <= 0 && settings?.targetDate;
+  const balanceNegative = budgetMode === 'otomatis' && availableBalance <= 0;
+
+  if (targetPassed) {
+    return (
+      <div className="card p-6 flex flex-col items-center justify-center min-h-[260px]">
+        <h3 className="text-sm font-semibold text-surface-500 dark:text-surface-400 w-full text-center mb-4">
+          Batas Aman Harian
+        </h3>
+        <div className="flex-1 flex flex-col items-center justify-center text-center w-full space-y-3">
+          <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 text-red-500 flex items-center justify-center">
+            <Info size={28} />
+          </div>
+          <div>
+            <p className="text-surface-900 dark:text-white font-medium text-sm">Target Tanggal Terlewati</p>
+            <p className="text-xs text-surface-500 dark:text-surface-400 mt-1 px-4">
+              Silakan atur ulang target tanggal bertahan di Pengaturan.
+            </p>
+          </div>
+          <Link to="/settings" className="btn btn-secondary text-xs py-1.5 px-3">
+            Ke Pengaturan
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (balanceNegative) {
+    return (
+      <div className="card p-6 flex flex-col items-center justify-center min-h-[260px]">
+        <h3 className="text-sm font-semibold text-surface-500 dark:text-surface-400 w-full text-center mb-4">
+          Batas Aman Harian
+        </h3>
+        <div className="flex-1 flex flex-col items-center justify-center text-center w-full space-y-3">
+          <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 text-red-500 flex items-center justify-center">
+            <span className="text-2xl">💸</span>
+          </div>
+          <div>
+            <p className="text-red-500 font-medium text-sm">Saldo Tidak Mencukupi</p>
+            <p className="text-xs text-surface-500 dark:text-surface-400 mt-1 px-4">
+              Saldo tersedia saat ini Rp0 atau minus. Tidak ada batas aman pengeluaran.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const dailyLimit = getDailySafeLimit(availableBalance, remainingDays, budgetMode, settings?.dailyLimit || 50000);
   const remaining = calculateDailyRemaining(dailyLimit, todayExpenses || 0);
   const { status, color, label, percentage } = getBudgetStatus(remaining, dailyLimit);
 
@@ -41,9 +98,14 @@ export default function BudgetGauge() {
 
   return (
     <div className="card p-6 flex flex-col items-center">
-      <h3 className="text-sm font-semibold text-surface-500 dark:text-surface-400 mb-4">
-        Kuota Harian
-      </h3>
+      <div className="w-full flex items-center justify-center mb-1">
+        <h3 className="text-sm font-semibold text-surface-500 dark:text-surface-400">
+          Batas Aman Harian
+        </h3>
+      </div>
+      <p className="text-[10px] text-surface-400 text-center mb-4 leading-tight">
+        Pengganti Kuota Harian. <br/>Membantu pengeluaranmu aman sampai target.
+      </p>
       
       <div className="relative" style={{ width: size, height: size }}>
         {/* Background circle */}
@@ -92,6 +154,11 @@ export default function BudgetGauge() {
         <p className="text-xs text-surface-400 dark:text-surface-500 mt-1">
           dari {formatCurrency(dailyLimit)}/hari
         </p>
+        {budgetMode === 'otomatis' && settings?.targetDate && (
+           <p className="text-[10px] font-medium text-primary-500 bg-primary-50 dark:bg-primary-500/10 px-2 py-1 rounded-full mt-3 inline-block">
+             Target: {new Date(settings.targetDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+           </p>
+        )}
       </div>
     </div>
   );

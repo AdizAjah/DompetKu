@@ -16,7 +16,7 @@ export default function Sidebar() {
   const { isDark, toggleTheme } = useTheme();
 
   return (
-    <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-[280px] flex-col z-30
+    <aside id="sidebar-navigation" className="hidden lg:flex fixed left-0 top-0 h-screen w-[280px] flex-col z-30
       bg-white/80 dark:bg-surface-800/80 backdrop-blur-xl
       border-r border-surface-200 dark:border-surface-700/50">
       
